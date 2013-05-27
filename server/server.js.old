@@ -1,0 +1,49 @@
+var net = require('net')
+  , crypto = require('crypto')
+  , HOST = '127.0.0.1'
+  , PORT = 6969
+  , users = [];
+
+var shakeHand = (function () {
+    var statusLine = 'HTTP/1.1 101 Switching Protocols\r\n'
+      , headers = ['Upgrade: websocket', 'Connection: Upgrade']
+      , parseSecret = function (d) {
+        return (/(?:Sec\-WebSocket\-Key:\ (\S+))/.exec(d) || ['', ''])[1];
+    }
+      , secretCode = function (s) {
+        var r = s + '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
+          , a
+          , shasum = crypto.createHash('sha1');
+        shasum.update(r);
+        return shasum.digest('base64');
+    };
+    return function (d, S) {
+        var response = statusLine + headers.join('\n') + '\n' + 'Sec-WebSocket-Accept: ' + secretCode(parseSecret(d)) + '\n' + '\r\n';
+
+        S.write(response);
+        console.log(response);
+    };
+}());
+
+net.createServer(function (S) {
+    var name = S.remoteAddress + ':' + S.remotePort;
+    console.log('CONNECTED: ' + name);
+    S.on('data', function (d) {
+        console.log('DATA FROM ' + name + ': ' + d + '\n');
+        if (!users[name]){
+            shakeHand(d, S);
+            users[name] = true;
+        } else if (d[0] == 136) { // close
+            S.end();
+        } else {
+            S.write('you said');
+            console.log(d);
+        }
+    });
+    S.on('close', function (){
+        delete users[name];
+        console.log('CLOSED: ' + name);
+    });
+}).listen(PORT, HOST);
+
+console.log('Server listening on ' + HOST + ':' + PORT);

@@ -100,7 +100,7 @@ YUI().use('*', function (Y) {
     });
 
     socket.on('msg-file', function (m) {
-        var template = '<p>{user} uploads a file: <a href="{href}">{name}</a></p>';
+        var template = '<p>{user} uploads a file: <a href="{href}" target="_blank">{name}</a></p>';
         Y.one('#message-col').append(Y.Lang.sub(template, m));
     });
 });

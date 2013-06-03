@@ -1,5 +1,6 @@
-% title 基于HTML5 WebSocket的在线群聊
-% authors 杨令潇(PB10000316)  张义飞(PB10007)
+% 基于HTML5 WebSocket的在线群聊
+
+<p style="text-align: center">杨令潇(PB10000316)  张义飞(PB10007143)</p>
 
 # 介绍
 
@@ -10,6 +11,8 @@ HTML5中引入了WebSocket，实现了客户端与服务器端的直接双向通
 客户端的表现形式是网页文件（HTML），可以在服务器端静态存储。用户打开这个网页文件后，用户的浏览器与服务器通过一次HTTP握手建立WebSocket连接，之后则以TCP连接的形式发送数据包，不再需要HTTP协议。
 
 服务器端处理握手HTTP报文，并返回适当的HTTP响应，随后则是TCP交流，实现由Node.js完成。
+
+实验报告与所有源码都由Github托管：<https://github.com/evojimmy/web-socket-chat>
 
 # 使用与功能介绍
 
@@ -56,7 +59,55 @@ HTML5中引入了WebSocket，实现了客户端与服务器端的直接双向通
 
 ## RFC 6455: WebSocket协议规范
 
+### HTTP握手
 
+首先客户端向服务器发起握手请求，报文如下所示：
+
+        GET /chat HTTP/1.1
+        Host: server.example.com
+        Upgrade: websocket
+        Connection: Upgrade
+        Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
+        Origin: http://example.com
+        Sec-WebSocket-Protocol: chat, superchat
+        Sec-WebSocket-Version: 13
+
+若要协议成功，报文头部必须注明`websocket`。更重要的一条是`Sec-WebSocket-Key`，这是客户端随机生成的一段base64，用来检测服务器端是否有能力生成相对应的一段base64。客户端会检查HTTP响应头部中的`Sec-WebSocket-Key`，若有误则必须终止连接。
+
+随后服务器端返回HTTP响应如下：
+
+        HTTP/1.1 101 Switching Protocols
+        Upgrade: websocket
+        Connection: Upgrade
+        Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
+        Sec-WebSocket-Protocol: chat
+
+其状态码必须为101，同时返回另一段`Sec-WebSocket-Accept`，规则为：将请求中的base64字符串与字符串`258EAFA5-E914-47DA-95CA-C5AB0DC85B11`组成形成字符串`dGhlIHNhbXBsZSBub25jZQ==258EAFA5-E914-47DA-95CA-C5AB0DC85B11`，再对其base64编码生成返回值`s3pPLMBiTxaQ9kYGzzhZRbK+xOo=`。如果这一步出现错误，则握手不能成功完成。
+
+### 数据与指令传输
+
+如下所示为RFC 6455规定的数据帧（Frame）格式。所有的数据与指令都要封装在这样的数据帧中传输，服务器端接收到的是二进制`Buffer`类型。比如终止WebSocket也需要发送一个数据帧，只是`opcode`设为0x8而不是指示数据的0x1。
+
+      0                   1                   2                   3
+      0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+     +-+-+-+-+-------+-+-------------+-------------------------------+
+     |F|R|R|R| opcode|M| Payload len |    Extended payload length    |
+     |I|S|S|S|  (4)  |A|     (7)     |             (16/64)           |
+     |N|V|V|V|       |S|             |   (if payload len==126/127)   |
+     | |1|2|3|       |K|             |                               |
+     +-+-+-+-+-------+-+-------------+ - - - - - - - - - - - - - - - +
+     |     Extended payload length continued, if payload len == 127  |
+     + - - - - - - - - - - - - - - - +-------------------------------+
+     |                               |Masking-key, if MASK set to 1  |
+     +-------------------------------+-------------------------------+
+     | Masking-key (continued)       |          Payload Data         |
+     +-------------------------------- - - - - - - - - - - - - - - - +
+     :                     Payload Data continued ...                :
+     + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+     |                     Payload Data continued ...                |
+     +---------------------------------------------------------------+
+
+值得一提的是，RFC 6455规定所有数据传送都必须经过编码，并将MASK位置为1，否则服务器应当终止WebSocket连接。此处编解码规则非常繁琐，所以最终没有继续实现WebSocket的底层TCP协议，而采用了标准封装库socket.io。
 
 ## WebSocket统一协议：socket.io
 
@@ -198,7 +249,7 @@ Javascript:
        |  |
        |  +--- server.js    服务器端程序
        |  |
-       |  +--- server.js.old    废弃的服务器端程序[^2]
+       |  +--- server.js.old    废弃的服务器端程序
        |  |
        |  +--- upload    上传文件托管区域
        |
@@ -206,9 +257,9 @@ Javascript:
           |
           +--- index.html    HTML文件
           |
-          +--- yui.css    YUI 3 Library[^3]
+          +--- yui.css    YUI 3 Library
           |
-          +--- yui.js    YUI 3 Library[^4]
+          +--- yui.js    YUI 3 Library
           |
           +--- style.css    页面布局与样式设置
           |
@@ -217,7 +268,10 @@ Javascript:
           ---- socket.io    socket.io客户端库
 
 
+注：
 
-[^2]: 能够实现RFC 6455规定中WebSocket协议的HTTP握手，但是不能够解析WebSocket数据包。
-[^3]: 集合了CSS Reset，CSS Base，CSS Font与YUI Style Button。
-[^4]: 集合了YUI Core, node, event, button模块等。
++ server.js.old: 能够实现RFC 6455规定中WebSocket协议的HTTP握手，但是不能够解析WebSocket数据包。
+
++ yui.css: 集合了CSS Reset，CSS Base，CSS Font与YUI Style Button。
+
++ yui.js: 集合了YUI Core, node, event, button模块等。

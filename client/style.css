@@ -1,0 +1,109 @@
+body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+#wrapper {
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #eef;
+}
+textarea {
+    background: #eef;
+}
+#message-col {
+    display: block;
+    width: calc(100% - 200px);
+    height: calc(100% - 125px);
+    overflow-y: scroll;
+}
+
+#message-input {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+}
+
+#input-msg {
+    height: 100px;
+    width: calc(100% - 100px);
+}
+#input-msg-send {
+    position: absolute;
+    bottom: 45px;
+    right: 0;
+    height: 55px;
+    width: 90px;
+}
+#send-file {
+    position: absolute;
+    bottom: 5px;
+    right: 0;
+    height: 35px;
+    width: 90px;
+}
+#online-li {
+    right: 0;
+    top: 1em;
+    width: 150px;
+    height: 100px;
+    position: absolute;
+}
+#online-list {
+    list-style-type: none;
+}
+
+
+#mask {
+    background-color: rgba(0, 0, 0, .5);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+.panel-wrapper {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+}
+[id^="panel-"] {
+    position: relative;
+    left: -50%;
+    border: 1px solid black;
+    box-shadow: 0 0 1px 1px #000;
+    border-radius: 4px;
+    background: #fff;
+}
+.panel-header {
+    font-size: 150%;
+    padding: 0.3em 0;
+    background: #3c66b5;
+    text-align: center;
+    color: #fff;
+    text-shadow: 1px 1px 1px black;
+    background-image: linear-gradient(180deg, #3c66b5 95%, #001 100%)
+}
+.panel-body {
+    padding: 1.25em 1em;
+    background: #74a5de;
+    transition: background-color 1s;
+}
+.panel-body.em {
+    background: #fe8756;
+}
+.panel-footer {
+    padding: 0.5em 1em;
+    text-align: right;
+    background: #74a5de;
+}
+dd {
+    margin-bottom: 1em;
+}

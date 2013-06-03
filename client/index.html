@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Online Group Talk Room</title>
+    <link rel="stylesheet" href="yui.css">
+    <link rel="stylesheet" href="style.css">
+    <meta charset="utf-8">
+  </head>
+  <body class="yui3-skin-sam">
+    <div id="wrapper">
+      <div id="online-li">
+        <strong style="margin: 0 auto">Online Users</strong>
+        <ul id="online-list">
+        </ul>
+      </div>
+      <dl id="message-col">
+      </dl>
+      <form id="messsage-input">
+        <textarea placeholder="Write a message. Press Ctrl + Enter to send." id="input-msg"></textarea>
+        <input type="submit" value="Send" class="yui3-button" id="input-msg-send">
+        <button class="yui3-button" id="send-file">Share File</button>
+      </form>
+    </div>
+    <div id="mask"></div>
+    <div class="panel-wrapper">
+      <div id="panel-file">
+        <div class="panel-header">
+          Share File
+        </div>
+        <div class="panel-body">
+          <input type="file" id="choose-file">
+        </div>
+        <div class="panel-footer">
+          <button class="ok yui3-button">OK</button>
+          <button class="cancel yui3-button">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <div class="panel-wrapper">
+      <div id="panel-nickname" class="my-panel">
+        <div class="panel-header">
+          Pick a nickname
+        </div>
+        <div class="panel-body">
+          <input type="text" id="nickname-input" autofocus>
+          <button class="ok yui3-button">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="socket.io/socket.io.js"></script>
+    <script src="yui.js"></script>
+    <script src="main.js"></script>
+
+  </body>
+</html>

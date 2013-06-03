@@ -1,6 +1,6 @@
 % 基于HTML5 WebSocket的在线群聊
-
-<p style="text-align: center">杨令潇(PB10000316)  张义飞(PB10007143)</p>
+%
+% 杨令潇(PB10000316)  张义飞(PB10007143)
 
 # 介绍
 
@@ -14,7 +14,7 @@ HTML5中引入了WebSocket，实现了客户端与服务器端的直接双向通
 
 实验报告与所有源码都由Github托管：<https://github.com/evojimmy/web-socket-chat>
 
-# 使用与功能介绍
+# 使用方法
 
 0.  必要配置
 

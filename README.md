@@ -1,17 +1,16 @@
 基于HTML5 WebSocket的在线群聊
 ===========================
 
-# 介绍
+## 介绍
 
-HTML5中引入了WebSocket，实现了客户端与服务器端的直接双向通信。WebSocket的实现遵循RFC 6455规定[^1]，包括HTTP握手、数据打包和状态控制等具体协议。在服务器端的配合下，可以实现浏览器中非常便利的双向数据转发，并进而实现群聊与文件传输的功能。
+HTML5中引入了WebSocket，实现了客户端与服务器端的直接双向通信。WebSocket的实现遵循RFC 6455规定，包括HTTP握手、数据打包和状态控制等具体协议。在服务器端的配合下，可以实现浏览器中非常便利的双向数据转发，并进而实现群聊与文件传输的功能。
 
-[^1]: RFC 6455 - The WebSocket Protocol: <http://tools.ietf.org/html/rfc6455>
 
 客户端的表现形式是网页文件（HTML），可以在服务器端静态存储。用户打开这个网页文件后，用户的浏览器与服务器通过一次HTTP握手建立WebSocket连接，之后则以TCP连接的形式发送数据包，不再需要HTTP协议。
 
 服务器端处理握手HTTP报文，并返回适当的HTTP响应，随后则是TCP交流，实现由Node.js完成。
 
-# 使用与功能介绍
+## 使用与功能介绍
 
 0.  必要配置
 
@@ -51,25 +50,25 @@ HTML5中引入了WebSocket，实现了客户端与服务器端的直接双向通
 
     ![user-guide](./assets/user-guide-5.png)
 
-# 源码文件列表
+## 源码文件列表
 
-    ---- **web-socket-chat**
+    ---- web-socket-chat
        |
        +--- README.md    Github repo说明
        |
        +--- REPORT.md    实验报告
        |
-       +--- **assets**   实验报告外链图片
+       +--- assets   实验报告外链图片
        |
-       +--- **server**
+       +--- server
        |  |
        |  +--- server.js    服务器端程序
        |  |
        |  +--- server.js.old    废弃的服务器端程序，能够实现RFC 6455规定WebSocket协议的HTTP握手
        |  |
-       |  +--- **upload**    上传文件托管区域
+       |  +--- upload    上传文件托管区域
        |
-       ---- **client**
+       ---- client
           |
           +--- index.html    HTML文件
           |
@@ -81,4 +80,4 @@ HTML5中引入了WebSocket，实现了客户端与服务器端的直接双向通
           |
           +--- main.js    客户端主要功能
           |
-          ---- **socket.io**    socket.io客户端库
+          ---- socket.io    socket.io客户端库
